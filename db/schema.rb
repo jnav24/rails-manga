@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_29_163941) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_29_231615) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,6 +42,54 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_29_163941) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "model_has_permissions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "model_id", null: false
+    t.string "model_type", null: false
+    t.bigint "permission_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["model_type", "model_id"], name: "index_model_has_permissions_on_model_type_and_model_id"
+    t.index ["permission_id", "model_type", "model_id"], name: "index_model_has_permissions_on_permission_and_model", unique: true
+    t.index ["permission_id"], name: "index_model_has_permissions_on_permission_id"
+  end
+
+  create_table "model_has_roles", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "model_id", null: false
+    t.string "model_type", null: false
+    t.bigint "role_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["model_type", "model_id"], name: "index_model_has_roles_on_model_type_and_model_id"
+    t.index ["role_id", "model_type", "model_id"], name: "index_model_has_roles_on_role_and_model", unique: true
+    t.index ["role_id"], name: "index_model_has_roles_on_role_id"
+  end
+
+  create_table "permissions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "guard_name", default: "web"
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name", "guard_name"], name: "index_permissions_on_name_and_guard_name", unique: true
+  end
+
+  create_table "role_has_permissions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "permission_id", null: false
+    t.bigint "role_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["permission_id"], name: "index_role_has_permissions_on_permission_id"
+    t.index ["role_id", "permission_id"], name: "index_role_has_permissions_on_role_and_permission", unique: true
+    t.index ["role_id"], name: "index_role_has_permissions_on_role_id"
+  end
+
+  create_table "roles", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "guard_name", default: "web"
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name", "guard_name"], name: "index_roles_on_name_and_guard_name", unique: true
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -61,5 +109,9 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_29_163941) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "model_has_permissions", "permissions"
+  add_foreign_key "model_has_roles", "roles"
+  add_foreign_key "role_has_permissions", "permissions"
+  add_foreign_key "role_has_permissions", "roles"
   add_foreign_key "sessions", "users"
 end

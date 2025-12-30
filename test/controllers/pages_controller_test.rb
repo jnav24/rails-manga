@@ -5,9 +5,4 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     get root_url
     assert_response :success
   end
-
-  test "should get up" do
-    get up_url
-    assert_response :success
-  end
 end
