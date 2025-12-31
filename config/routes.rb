@@ -1,7 +1,12 @@
 Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
-  resources :mangas, only: [:index, :create, :new, :show]
+  resources :mangas
+  get 'mangas/:id/chapters/:chapter', to: 'mangas#chapter', as: 'chapter'
+  get 'mangas/:location/:chapter/:image_name',
+      to: 'mangas#image',
+      as: :chapter_image,
+      constraints: { filename: /[^\/]+/ }
   root to: "pages#home"
 
   # Sidekiq has a web dashboard which you can enable below. It's turned off by

@@ -1,0 +1,12 @@
+<h1><%= @manga.name %> Chapter <%= @chapter %></h1>
+
+<%= link_to 'Manga Page', mangas_path %>
+<%= link_to 'Back to Chapters', manga_path(@manga) %>
+
+<div>
+  <% @images.each do |image| %>
+    <div class="photo-card">
+      <%= image_tag temporary_image_url(@manga.location, @chapter, image), loading: "lazy" %>
+    </div>
+  <% end %>
+</div>

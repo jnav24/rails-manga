@@ -1,3 +1,15 @@
+<%= link_to 'Manga Page', mangas_path %>
+<%= link_to 'Edit', edit_manga_path(@manga) %>
+
 <h1><%= @manga.name %></h1>
 
 <p><%= @manga.description %></p>
+<p><%= @manga.location %></p>
+
+<pre><%= @manga.chapters %></pre>
+
+<% @manga.chapters.each do |chapter| %>
+  <p><%= chapter %></p>
+  <%= link_to 'Read', chapter_path(@manga, chapter) %>
+<% end %>
+
