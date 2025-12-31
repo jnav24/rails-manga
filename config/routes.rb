@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
+  resources :mangas, only: [:index, :create, :new, :show]
   root to: "pages#home"
 
   # Sidekiq has a web dashboard which you can enable below. It's turned off by

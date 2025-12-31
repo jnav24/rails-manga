@@ -1,0 +1,9 @@
+<h1>Mangas</h1>
+<%= link_to 'Add Manga', new_manga_path %>
+<pre><%= @test %></pre>
+
+<% @mangas.each do |manga| %>
+  <p><%= manga.name %></p>
+  <%= link_to 'Show', manga_path(manga) %>
+<% end %>
+
