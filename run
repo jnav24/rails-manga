@@ -190,7 +190,7 @@ yarn:build:css() {
 
 clean() {
   # Remove cache and other machine generates files
-  rm -rf node_modules/ app/assets/builds/* public/assets tmp/* .byebug_history
+  rm -rf node_modules/ ./app/assets/builds/* public/assets tmp/* .byebug_history
 }
 
 ci:install-deps() {
