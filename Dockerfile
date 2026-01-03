@@ -20,10 +20,10 @@ RUN bash -c "set -o pipefail && apt-get update \
 
 USER ruby
 
-COPY --chown=ruby:ruby Gemfile* ./
+COPY --chown=${UID}:${GID} Gemfile* ./
 RUN bundle install
 
-COPY --chown=ruby:ruby package.json *yarn* ./
+COPY --chown=${UID}:${GID} package.json *yarn* ./
 RUN yarn install
 
 ARG RAILS_ENV="production"
@@ -33,7 +33,7 @@ ENV RAILS_ENV="${RAILS_ENV}" \
   PATH="${PATH}:/home/ruby/.local/bin:/node_modules/.bin" \
   USER="ruby"
 
-COPY --chown=ruby:ruby . .
+COPY --chown=${UID}:${GID} . .
 
 RUN if [ "${RAILS_ENV}" != "development" ]; then \
   SECRET_KEY_BASE_DUMMY=1 rails assets:precompile; fi
@@ -66,7 +66,7 @@ RUN apt-get update \
 
 USER ruby
 
-COPY --chown=ruby:ruby bin/ ./bin
+COPY --chown=${UID}:${GID} bin/ ./bin
 RUN chmod 0755 bin/*
 
 ARG RAILS_ENV="production"
@@ -74,9 +74,9 @@ ENV RAILS_ENV="${RAILS_ENV}" \
   PATH="${PATH}:/home/ruby/.local/bin" \
   USER="ruby"
 
-COPY --chown=ruby:ruby --from=assets /usr/local/bundle /usr/local/bundle
-COPY --chown=ruby:ruby --from=assets /app/public /public
-COPY --chown=ruby:ruby . .
+COPY --chown=${UID}:${GID} --from=assets /usr/local/bundle /usr/local/bundle
+COPY --chown=${UID}:${GID} --from=assets /app/public /public
+COPY --chown=${UID}:${GID} . .
 
 ENTRYPOINT ["/app/bin/docker-entrypoint-web"]
 
