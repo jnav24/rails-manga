@@ -170,7 +170,7 @@ yarn:build() {
     args=(--sourcemap --watch)
   fi
 
-  esbuild app/javascript/*.* --outdir=app/assets/builds --bundle "${args[@]}"
+  esbuild app/javascript/*.* --outdir=./app/assets/builds --bundle "${args[@]}"
 }
 
 yarn:build:css() {
