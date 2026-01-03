@@ -14,9 +14,9 @@ RUN bash -c "set -o pipefail && apt-get update \
   && corepack enable \
   && rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man \
   && apt-get clean \
-  && groupadd -g \"${GID}\" ruby \
-  && useradd --create-home --no-log-init -u \"${UID}\" -g \"${GID}\" ruby \
-  && mkdir /node_modules && chown ruby:ruby -R /node_modules /app"
+  && (getent group \"${GID}\" || groupadd -g \"${GID}\" ruby) \
+  && (useradd --create-home --no-log-init -u \"${UID}\" -g \"${GID}\" ruby || useradd --create-home --no-log-init -u \"${UID}\" -g \"$(getent group \"${GID}\" | cut -d: -f1)\" ruby) \
+  && mkdir /node_modules && chown \"${UID}:${GID}\" -R /node_modules /app"
 
 USER ruby
 
@@ -59,9 +59,10 @@ RUN apt-get update \
   && corepack enable \
   && rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man \
   && apt-get clean \
-  && groupadd -g "${GID}" ruby \
-  && useradd --create-home --no-log-init -u "${UID}" -g "${GID}" ruby \
-  && chown ruby:ruby -R /app
+  && (getent group "${GID}" || groupadd -g "${GID}" ruby) \
+  && (useradd --create-home --no-log-init -u "${UID}" -g "${GID}" ruby || \
+      useradd --create-home --no-log-init -u "${UID}" -g "$(getent group "${GID}" | cut -d: -f1)" ruby) \
+  && chown "${UID}:${GID}" -R /app
 
 USER ruby
 
